@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cliente;
+use App\Rules\Cpf;
 
 class ClienteController extends Controller
 {
@@ -24,7 +25,7 @@ class ClienteController extends Controller
     {
         $request->validate([
             'nome' => 'required|string|max:200',
-            'cpf' => 'required|string|unique:clientes|max:14',
+            'cpf' => ['required', 'string', 'max:14', 'unique:clientes', new Cpf],
             'telefone' => 'required|string|max:20',
             'endereco' => 'required|string',
         ]);
@@ -34,8 +35,8 @@ class ClienteController extends Controller
         return response()->json($cliente, 201);
     }
 
-    /*
-	      Função para mostrar um cliente especifico
+    /**
+     * Função para mostrar um cliente especifico
      */
     public function show(Cliente $cliente)
     {
@@ -44,14 +45,14 @@ class ClienteController extends Controller
 
     }
 
-    /*
-	      Função que altera os dados do cliente
+    /**
+     * Função que altera os dados do cliente
      */
     public function update(Request $request, Cliente $cliente)
     {
         $request->validate([
             'nome' => 'string|max:200',
-            'cpf' => 'string|unique:clientes,cpf,' . $cliente->id . '|max:14', // Ignorar a alteração
+            'cpf' => ['string', 'max:14', 'unique:clientes,cpf,' . $cliente->id, new Cpf],
             'telefone' => 'string|max:20',
             'endereco' => 'string',
         ]);
@@ -60,8 +61,8 @@ class ClienteController extends Controller
         return response()->json($cliente);
     }
 
-    /*
-	      Função para excluir um cliente especifico
+    /**
+     * Função para excluir um cliente especifico
      */
     public function destroy(Cliente $cliente)
     {
