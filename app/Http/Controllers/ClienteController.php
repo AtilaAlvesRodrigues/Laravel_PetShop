@@ -15,8 +15,15 @@ class ClienteController extends Controller
     {
         $clientes = Cliente::all();
 
-        return response()->json($clientes);
+        return view('clientes.index', compact('clientes'));
     }
+
+    public function create()
+    {
+        return view('clientes.create');
+    }
+
+
 
     /*
         Função para criar e armazenar um cliente na base de dados
@@ -32,7 +39,7 @@ class ClienteController extends Controller
 
         $cliente = Cliente::create($request->all());
 
-        return response()->json($cliente, 201);
+        return redirect()->route('clientes.create')->with('success', 'Cliente criado com sucesso');
     }
 
     /**
@@ -40,7 +47,7 @@ class ClienteController extends Controller
      */
     public function show(Cliente $cliente)
     {
-        return response()->json($cliente);
+        return view('clientes.show', compact('clientes'));
         // return view('clientes.show', compact('cliente'));
 
     }
@@ -58,7 +65,7 @@ class ClienteController extends Controller
         ]);
 
         $cliente->update($request->all());
-        return response()->json($cliente);
+        return redirect()->route('client.index')->with('success', 'Cliente alterado com sucesso');
     }
 
     /**
@@ -67,6 +74,6 @@ class ClienteController extends Controller
     public function destroy(Cliente $cliente)
     {
         $cliente->delete();
-        return response()->json(['message' => 'Cliente excluído com sucesso!']);
+        return redirect()->route('client.index')->with('success', 'Cliente alterado com sucesso');
     }
 }
